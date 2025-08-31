@@ -21,8 +21,12 @@ import { createUser, getUnreadNotifications, markNotificationAsRead, getUserByEm
 // Feature toggle: enable or disable Web3Auth integration in this header
 const ENABLE_WEB3AUTH = true;
 
-// Use env var when available (must be NEXT_PUBLIC_ prefixed to be accessible in the client)
-const clientId = process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID || "BNkUKihcB2Ieb8vZBBera49o-uloxI9fVS0UoNRRhlkk7xk7nH2hAxan9iEHQZgauCuXYDMZDzSGNo-1axkgIjQ";
+// Web3Auth client ID from environment variables
+const clientId = process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID;
+
+if (!clientId) {
+  console.error("Web3Auth client ID is not configured. Please set NEXT_PUBLIC_WEB3AUTH_CLIENT_ID in your .env.local file.");
+}
 
 const chainConfig = {
   chainNamespace: CHAIN_NAMESPACES.EIP155,
@@ -63,6 +67,12 @@ export default function Header({ onMenuClick, totalEarnings }: HeaderProps) {
   useEffect(() => {
     const init = async () => {
       if (!ENABLE_WEB3AUTH) {
+        setLoading(false);
+        return;
+      }
+
+      if (!clientId) {
+        console.error("Web3Auth client ID is missing");
         setLoading(false);
         return;
       }
