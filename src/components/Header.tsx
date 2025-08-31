@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { usePathname } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { Menu, Coins, Leaf, Search, Bell, User, ChevronDown, LogIn, LogOut } from "lucide-react"
 import { 
@@ -17,6 +18,7 @@ import { CHAIN_NAMESPACES, IProvider, WEB3AUTH_NETWORK } from "@web3auth/base"
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider"
 import { useMediaQuery } from "@/hooks/useMediaQuery"
 import { createUser, getUnreadNotifications, markNotificationAsRead, getUserByEmail, getUserBalance } from "@/utils/db/actions"
+import { toast } from 'react-hot-toast'
 
 const clientId = process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID;
 
@@ -50,6 +52,7 @@ export default function Header({ onMenuClick, totalEarnings }: HeaderProps) {
   const [loading, setLoading] = useState(true);
   const [userInfo, setUserInfo] = useState<any>(null);
   const pathname = usePathname()
+  const router = useRouter()
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const isMobile = useMediaQuery("(max-width: 768px)")
   const [balance, setBalance] = useState(0)
